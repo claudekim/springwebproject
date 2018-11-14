@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="c.d.e">
+
+<!-- +========댓글 쓸때 rno번호설정용======================+ -->
+	<select id="getRno" resultType="Integer">
+	select max(rno) from tbl_myreply
+	</select>
+
+<!-- +========댓글 쓰기===================================+ -->
+	<insert id="create">
+		insert into tbl_myreply(rno,bno,replyText,replyer)
+		values(#{rno},#{bno},#{replyText},#{replyer})
+	</insert>
+
+<!-- +========댓글페이징처리x리스트========================+ -->
+	<select id="list" resultType="ReplyVO">
+	select * from tbl_myreply where bno=#{bno} order by rno desc
+	</select>
+	
+<!-- +========댓글수정ㅎ==================================+ -->
+	<update id="update" >
+	update tbl_myreply set updatedate=sysdate, replytext = #{replyText} where rno=#{rno}
+	</update>
+	
+<!-- +========댓글지우기==================================+ -->
+	<delete id="delete">
+	delete from tbl_myreply where rno=#{rno}
+	</delete>
+	<delete id="deleteByBno">
+	delete from tbl_myreply where bno=#{bno}
+	</delete>
+
+<!-- +=========스타트넘과 엔드넘사이 댓글리스트===============+ -->	
+	<select id="replyListPage" resultType="ReplyVO">
+	<![CDATA[
+	select * from
+	(select rownum rnum, rno, replyer, replyText, regdate from
+	(select * from tbl_myreply where bno=#{bno}  order by rno desc)) where rnum >=#{startnum} and rnum <= #{endnum}
+	]]>
+	</select>	
+	
+<!-- +====bno값에 맞는 댓글수 ㅋㅏ운트=======================+ -->
+	<select id="amount" resultType="Integer">
+		select count(rno) from tbl_myreply where bno=#{bno}
+	</select>
+	
+<!-- +===================================================+ -->
+	<select id="listCriteria" resultType="ReplyVO">
+	<![CDATA[
+	select * from tbl_myreply where bno=#{bno} order by rno desc
+	]]>
+	</select>
+	
+</mapper>

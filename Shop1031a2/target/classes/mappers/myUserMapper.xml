@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="e.f.g">
+
+
+	<update id="updatePoint">
+	<![CDATA[	
+	update tbl_myuser set mpoint=mpoint+#{mpoint} where mid=#{mid}
+	]]>
+	</update>
+	
+	<select id="login" resultType="userVO">
+	<![CDATA[	
+	select * from tbl_myuser  where mid=#{mid} and  mpw=#{mpw}
+	]]>
+	</select>
+	
+	<update id="keepLogin">
+	<![CDATA[	
+	update tbl_myuser set sessionkey = #{sessionId} , sessionLimt=#{next}
+	where mid=#{mid} 
+	]]>
+	</update>
+	
+	<select id="checkUserWithSessionKey" resultType="userVO">
+	<![CDATA[	
+	select * from tbl_myuser  
+	where mid=#{mid} and sessionkey = #{value} and sessionlimt > sysdate
+	]]>
+	</select>
+</mapper>

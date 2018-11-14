@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="b.c.d">
+
+	<select id="getBno" resultType="Integer">
+		select max(bno) from tbl_myboard
+	</select>
+
+	<insert id="create">
+		insert into tbl_myboard(bno,title,content,writer)
+		values(#{bno},#{title},#{content},#{writer})
+	</insert>
+
+	<select id="listAll" resultType="BoardVO">
+		select * from tbl_myboard order
+		by bno desc
+	</select>
+
+	<select id="read" resultType="BoardVO">
+		select * from tbl_myboard where
+		bno=#{bno}
+	</select>
+
+	<!-- +=====================================================================+ -->
+	<update id="update">
+		update tbl_myboard set
+		title=#{title},content=#{content} where bno=#{bno}
+	</update>
+
+	<!-- +=====================================================================+ -->
+	<update id="increaseViewCnt">
+		update tbl_myboard set viewcnt=viewcnt+1 where
+		bno=#{bno}
+	</update>
+
+	<!-- +=====================================================================+ -->
+	<select id="selectByBno" resultType="BoardVO">
+		select * from tbl_myboard
+		where bno=#{bno}
+	</select>
+
+	<!-- +=====================================================================+ -->
+	<delete id="delete">
+		delete from tbl_myboard where bno=#{bno}
+	</delete>
+	<delete id="deleteChild">
+	<!--  update tbl_myreply set bno = null where bno=#{bno}-->
+	delete from tbl_myreply where bno=#{bno}
+	</delete>
+	
+	<!-- +=====================================================================+ -->
+	<select id="listPage" resultType="BoardVO">
+	<![CDATA[
+	select * from
+	(select rownum rnum, bno, title, content, regdate, viewcnt, writer from
+	(select * from tbl_myboard order by bno desc)) where rnum >=#{startnum} and rnum <= #{endnum}
+	]]>
+	</select>
+	
+	<!-- +=====================================================================+ -->
+	<select id="listCriteria" resultType="BoardVO">
+	<![CDATA[
+	select * from
+	(select rownum rnum, bno, title, content, regdate, viewcnt, writer from
+	(select * from tbl_myboard order by bno desc)) where rnum >=#{startNum} and rnum <= #{endNum}
+	]]>
+	</select>
+	
+	<!-- +=====================================================================+ -->
+	<select id="getAmount" resultType="Integer">
+		select count(bno) from tbl_myboard
+	</select>
+
+	
+	<!-- +=====================================================================+ -->
+	<sql id="search">
+		<if test="searchType !=null">
+			<if test="searchType=='writer'.toString() ">
+				where lower(writer) like  lower('%'||#{keyword}||'%')
+			</if>
+			<if test="searchType=='title'.toString() ">
+				where  lower(title) like  lower('%'||#{keyword}||'%')
+			</if>
+			<if test="searchType=='content'.toString() ">
+				where lower(content) like  lower('%'||#{keyword}||'%')
+			</if>
+		</if>
+	</sql>
+	
+	<!-- +=====================================================================+ -->
+	<select id="listSearch" resultType="BoardVO">
+	<![CDATA[
+	select * from
+	(select rownum rnum, bno, title, writer, content, regdate, viewcnt from
+	(select * from tbl_myboard
+	]]>
+	<include refid="search"></include>
+	<![CDATA[ 
+	order by bno desc)) 
+	where rnum  between #{startNum} and #{endNum}
+	]]>
+	</select>
+
+	<!-- +=====================================================================+ -->
+	<select id="getSearchAmount" resultType="Integer">
+	<![CDATA[
+	select count(bno) from tbl_myboard
+	]]>
+	<include refid="search"></include>
+	</select>
+
+	<!-- +=====================================================================+ -->
+	<select id="listCriteria3" resultType="BoardVO">
+	<![CDATA[
+	select * from tbl_myboard order by bno desc
+	]]>
+	</select>
+	
+	<!-- +=====================================================================+ -->
+	<select id="listSearch3" resultType="BoardVO">
+	<![CDATA[
+		select * from tbl_myboard 
+	]]>
+	<include refid="search"></include>
+	<![CDATA[
+	 order by bno desc
+	]]>
+	</select>
+	
+	<!-- +====이미지넣기=================================================================+ -->
+	<insert id="addAttach">
+		insert into tbl_attach(id, fullName, bno) 
+		values(#{id},#{fullName},#{bno})
+	</insert>
+	<select id="getId" resultType="Integer">
+	select max(id) from tbl_attach
+	</select>
+	<select id="getFileName" resultType="Integer">
+	select * from tbl_attach where bno=#{bno}
+	</select>
+	<!-- +====이미지가져오기=================================================================+ -->
+	<select id="getAttach" resultType="String">
+	select fullName from tbl_attach where bno=#{bno} order by regdate
+	</select>
+	
+	<delete id="deleteAttach">
+	delete from tbl_attach where fullName=#{fullName} and bno=#{bno}
+	</delete>
+	<delete id="deleteAllAttach">
+	delete from tbl_attach where bno=#{bno}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,176 @@
+@charset "UTF-8";
+
+.containerBig {
+	
+}
+header{
+	
+	margin-bottom: 0;
+}
+a {
+text-decoration:none ;
+ }
+a:hover {
+text-decoration:none ; 
+}
+
+.category {
+	border-bottom: solid 2px #ededed;
+	margin-bottom: 50px;
+}
+
+body {
+	background-color: #ffffff;
+}
+
+.menubar{
+	width : 98px;
+	border-right: solid 1px #ececec;
+	border-left: solid 1px #ececec;
+	text-align: center;
+	text-decoration:none ;
+}
+.navbar {
+	border-radius: 0;
+	z-index: 1000px;
+}
+
+.jumbotron {
+	height:100px;
+	margin-top: 0;
+	margin-bottom: 0;
+	background-color: #ffffff;
+}
+
+footer {
+	background-color: #ededed;
+	padding: 10px;
+}
+
+ul {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
+ul li {
+	display: inline-block;
+}
+
+ul li:hover {
+	background: #ffffff;
+}
+
+ul li:hover ul {
+	display: block;
+	background: #ffffff;
+}
+
+ul li ul {
+	position: absolute;
+	width: 70px;
+	display: none;
+	border: solid 1px #ececec;
+	z-index: 1000;
+}
+
+.senpoint{
+	//display: block;
+	width: 70px;
+	border: solid 1px #ececec;
+	border-radius: 8px;
+	text-align: center;
+}
+
+ul li ul li {
+	padding: 4px;
+	background: #ffffff;
+	display: block;
+}
+
+ul li ul li a {
+	display: block !important;
+}
+
+ul li ul li:hover {
+	background: #ececec;
+}
+
+.bestList {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.newList{
+	border-top: solid 2px #ededed;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.category2   {
+	text-align: center;
+	margin-right: auto;
+	margin-left: auto;
+	font-style: #000000;
+	
+}
+.category2  :hover{
+	border: solid 1px #ececec;
+	background-color: #ececec;
+}
+.category2  li {
+	border: solid 1px #ececec;
+}
+
+.clickCategory1{
+	padding-top :30px;
+	margin-right: auto;
+	margin-left: auto;
+}
+h4 {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+h3 {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+h2 {
+	padding-top: 10px;
+	padding-bottom: 20px;
+	text-align: center;
+}
+
+.panel{
+border-color: #ffffff;
+box-shadow:  none;
+}
+.choose{
+
+	background-color: #ececec;
+}
+.login1 {
+	margin-top: 30px;
+	padding: 30px;
+	border-top: Dashed 2px #ededed;
+	border-bottom: Dashed 2px #ededed;
+	border-radius: 8px;
+	background-color: #ffffff;
+	//width: 400px;
+}
+
+//create
+.dropArea {
+	width: 66%;
+	height: 100px;
+	border: 1px solid #ededed;
+	background: #efefef;
+	margin: 10px auto 0 auto;
+	border-radius: 8px;
+}
+
+.uploadFiles li {
+	list-style-type: none;
+}

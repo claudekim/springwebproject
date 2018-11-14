@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.Product.a">
+
+
+<!-- ### 상품 등록 ### -->
+	<select id="getProductNo" resultType="Integer">
+		select max(productNo) from TEAM_PRODUCT
+	</select>
+	
+	<insert id="create">
+		insert into TEAM_PRODUCT 
+		(productNo, productName, productPrice,
+		category1, category2, rest, productImgPath, productContent,SOLDSUM)
+		values 
+		(#{productNo}, #{productName}, #{productPrice},
+		#{category1}, #{category2}, #{rest}, #{productImgPath},
+		#{productContent},0)
+	</insert>
+	
+	<select id="category1List" resultType="String">
+		select Category1 from TEAM_CATEGORY group by Category1 order by Category1 asc
+	</select>
+	
+	<select id="category2List" resultType="String">
+		select Category2 from TEAM_CATEGORY where Category1 = #{Category1} order by Category2 asc
+	</select>
+	
+	
+<!-- ### 상품  상세페이지 업데이트 ###-->
+
+
+	
+
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+</mapper>

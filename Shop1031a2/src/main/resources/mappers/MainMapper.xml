@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ma.i.n">
+
+	<!-- +====TEAM_PRODUCT=========================================+ -->
+	<!-- 전체에서 잘팔린순 -->
+	<select id="bestList" resultType="ProductVO">
+		select * from TEAM_PRODUCT order by soldSum desc
+	</select>
+	
+	<!-- 전체에서 신규순 -->
+	<select id="newList" resultType="ProductVO">
+		select * from TEAM_PRODUCT order by productNo desc
+	</select>
+	
+	<!-- 대분류 Category1에서 잘팔린순 -->
+	<select id="bestCategory1List" resultType="ProductVO">
+		select * from TEAM_PRODUCT  where Category1=#{Category1}  order by soldSum desc
+	</select>
+	
+	<!-- 대분류 Category1에서 신규순 -->
+	<select id="clickCategory1" resultType="ProductVO">
+		select * from TEAM_PRODUCT where Category1=#{Category1} order by productNo desc
+	</select>
+	
+	<!-- 소분류Category2에서 신규순 -->
+	<select id="clickCategory2"  resultType="ProductVO">
+		select * from TEAM_PRODUCT where Category2=#{Category2} order by productNo desc
+	</select>
+	
+	<!-- 소분류 Category2에서 잘팔린순 -->
+	<select id="bestCategory2List" resultType="ProductVO">
+		select * from TEAM_PRODUCT  where Category2=#{Category2}  order by soldSum desc
+	</select>
+	
+	<!-- 상세페이지 -->
+	<select id="selectByProductNo" resultType="ProductVO">
+		select * from TEAM_PRODUCT  where productNo=#{productNo}
+	</select>
+	
+	
+	<!-- +===page===================================================+ -->
+	<select id="getBestListAmount" resultType="Integer">
+		select count(productNo) from TEAM_PRODUCT
+	</select>
+	<select id="getCategory1Amount" resultType="Integer">
+		select count(productNo) from TEAM_PRODUCT where category1
+	</select>
+	<select id="getCategory2Amount" resultType="Integer">
+		select count(productNo) from TEAM_PRODUCT where category2
+	</select>
+	
+	<!-- +===TEAM_CATEGORY===================================================+ -->
+	<!-- 대분류로 소분류 찾기 신규순 -->
+	<select id="category2Of1"  resultType="CategoryVO">
+		select * from TEAM_CATEGORY where Category1=#{Category1} 
+	</select>
+	
+	<!-- 대분류 중복시1개만꺼내 -->
+	<select id="navCategory"  resultType="CategoryVO">
+		select Category1 from TEAM_CATEGORY group by Category1
+	</select>
+	
+	
+	<!-- +==tbl_attach==이미지넣기==============================================+ -->
+	<insert id="addAttach">
+		insert into tbl_attach(id, fullName, bno) 
+		values(#{id},#{fullName},#{bno})
+	</insert>
+	<select id="getId" resultType="Integer">
+	select max(id) from tbl_attach
+	</select>
+	<select id="getFileName" resultType="Integer">
+	select * from tbl_attach where bno=#{bno}
+	</select>
+	
+	<!-- +====이미지가져오기================================================+ -->
+	<select id="getAttach" resultType="String">
+	select fullName from tbl_attach where bno=#{bno} order by regdate
+	</select>
+	
+	<delete id="deleteAttach">
+	delete from tbl_attach where fullName=#{fullName} and bno=#{bno}
+	</delete>
+	<delete id="deleteAllAttach">
+	delete from tbl_attach where bno=#{bno}
+	</delete>
+	
+	<!-- +====상세->장바구니 시작!~================================================+ -->
+	
+	<!--1-1카트리스트에 상품이 존재하는지 여부 -->
+	<select id="alreadyMyCartList" resultType="CartListVO">
+	select * from TEAM_CARTLIST where id=#{id} and productNo=#{productNo}
+	</select>
+	
+	<!--1-2 카트번호 신규생성 -->
+	<select id="getCartListNum"  resultType="Integer">
+		select max(CARTLISTNUM) from TEAM_CARTLIST
+	</select>
+	
+	<!--1-2 카트리스트 객체저장 -->
+	<insert id="makeCartList">
+		insert into TEAM_CARTLIST(CARTLISTNUM ,ID ,PRODUCTNO ,productName, productPrice , PRODUCTQUANTITY)
+		values(#{cartListNum},#{id},#{productNo},#{productName},#{productPrice},#{productQuantity})
+	</insert>
+	
+	<!--1-5 동일상품 수량 추가 -->
+	<update id="updateCartListPlus">
+		update TEAM_CARTLIST set
+		productQuantity = productQuantity+#{productQuantity} 
+		where id=#{id} and productNo=#{productNo}
+	</update>
+	
+	<!--2-1 내 카트리스트 불러오기 -->
+	<select id="selectMyCartList" resultType="CartListVO">
+	select * from TEAM_CARTLIST where id=#{id}  
+	</select>
+	
+	<!--2-1-2 내 카트리스트 불러온거에서 상품불러오기 -->
+	<select id="selectMyProduct" resultType="ProductVO">
+	select * from TEAM_Product where productNO=#{productNO}  
+	</select>
+	
+	<!--2-3 동일상품 변경 -->
+	<update id="updateCartListChange">
+		update TEAM_CARTLIST set
+		productQuantity = #{productQuantity} 
+		where id=#{id} and cartListNum=#{cartListNum}
+	</update>
+	
+	<!--2-4 해당 물건 삭제 -->
+	<delete id="deleteOneCartList">
+		delete from TEAM_CARTLIST 
+		where 
+		id=#{id} and cartListNum=#{cartListNum}
+	</delete>
+	
+	<!--4 장바구니 전체삭제 -->
+	<delete id="deleteAllCartList">
+		delete from TEAM_CARTLIST 
+		where id=#{id} 
+	</delete>
+	
+	<!-- +====TEAM_PRODUCT==paging========================================+ -->
+	<select id="BestListPage" resultType="ProductVO">
+	<![CDATA[
+	select * from
+	(select 
+	rownum rnum, productNo, productName ,
+	productPrice, viewCount, pregdate,
+	category1, category2, rest, 
+	soldSum, productImgPath, productContent 
+	from
+	(select * from TEAM_PRODUCT order by soldSum desc)) where rnum >=#{startnum} and rnum <= #{endnum}
+	]]>
+	</select>
+	
+	<select id="NewListCriteria" resultType="ProductVO">
+	<![CDATA[
+	select * from
+	(select 
+	rownum rnum, productNo, productName ,
+	productPrice, viewCount, pregdate,
+	category1, category2, rest, 
+	soldSum, productImgPath, productContent 
+	from
+	(select * from TEAM_PRODUCT order by productNo desc)) where rnum >=#{startNum} and rnum <= #{endNum}
+	]]>
+	</select>
+	
+	<!-- +====================================================+ -->
+	
+	
+</mapper>
